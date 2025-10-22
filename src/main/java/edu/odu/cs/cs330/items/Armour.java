@@ -1,147 +1,107 @@
 package edu.odu.cs.cs330.items;
 
-import java.util.Scanner;
+import java.util.Objects;
 
-/**
- * This class represents one piece of armour--as found in most video games.
- * This includes boots and helmets.
- *
- * Armour may not be stacked.
- */
-@SuppressWarnings({
-    "PMD.BeanMembersShouldSerialize",
-    "PMD.CloneMethodReturnTypeMustMatchClassName",
-    "PMD.CloneThrowsCloneNotSupportedException",
-    "PMD.LawOfDemeter",
-    "PMD.OnlyOneReturn",
-    "PMD.ProperCloneImplementation",
-    "PMD.MethodArgumentCouldBeFinal",
-    "PMD.LocalVariableCouldBeFinal"
-})
-public class Armour extends Equippable {
-    /**
-     * The amount of damage that can be negated.
-     */
-    protected int defense;
+public class Armour extends Item implements Cloneable {
 
-    /**
-     * Default to a armour with a defense of zero.
-     */
-    public Armour()
-    {
+    private int durability;
+    private int defense;
+    private String material;
+    private String modifier;
+    private int modifierLevel;
+    private String element;
+
+    // Default constructor
+    public Armour() {
         super();
-
+        this.durability = 0;
         this.defense = 0;
+        this.material = "";
+        this.modifier = "";
+        this.modifierLevel = 0;
+        this.element = "";
     }
 
-    /**
-     * Duplicate a piece of armour.
-     *
-     * @param src armour to duplicate
-     */
-    public Armour(Armour src)
-    {
-        super(src.name);
-
-        this.durability = src.durability;
-        // Copt the remaining fields (data members)
+    // Copy constructor
+    public Armour(Armour other) {
+        super(other.getName());
+        this.durability = other.durability;
+        this.defense = other.defense;
+        this.material = other.material;
+        this.modifier = other.modifier;
+        this.modifierLevel = other.modifierLevel;
+        this.element = other.element;
     }
 
-    /**
-     * Retrieve armour defense.
-     *
-     * @return total defense provided
-     */
-    public int getDefense()
-    {
-        return this.defense;
-    }
+    // Getters and Setters
+    public int getDurability() { return durability; }
+    public void setDurability(int durability) { this.durability = durability; }
 
-    /**
-     * Update defense.
-     *
-     * @param def replacement defense
-     */
-    public void setDefense(int def)
-    {
-        this.defense = def;
-    }
+    public int getDefense() { return defense; }
+    public void setDefense(int defense) { this.defense = defense; }
+
+    public String getMaterial() { return material; }
+    public void setMaterial(String material) { this.material = material; }
+
+    public String getModifier() { return modifier; }
+    public void setModifier(String modifier) { this.modifier = modifier; }
+
+    public int getModifierLevel() { return modifierLevel; }
+    public void setModifierLevel(int level) { this.modifierLevel = level; }
+
+    public String getElement() { return element; }
+    public void setElement(String element) { this.element = element; }
 
     @Override
-    public boolean isStackable()
-    {
+    public boolean isStackable() {
         return false;
     }
 
-    /**
-     * Read Armour attributes.
-     */
     @Override
-    public void read(Scanner snr)
-    {
-        super.name = snr.next();
-
-        // Use snr.next() and snr.nextInt() to read in values remaining fields
-
+    public Armour clone() {
+        return new Armour(this);
     }
 
-    /**
-     * Clone--i.e., copy--this Armour.
-     */
     @Override
-    public Item clone()
-    {
-        // Replace the return
-        return new Armour();
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof Armour)) return false;
+        
+        Armour other = (Armour) obj;
+        return Objects.equals(getName(), other.getName()) &&
+               Objects.equals(material, other.material) &&
+               Objects.equals(modifier, other.modifier) &&
+               Objects.equals(element, other.element);
     }
 
-    /**
-     * Check for logical equivalence--based on name, material, modifier, and
-     * element.
-     *
-     * @param rhs object for which a comparison is desired
-     */
     @Override
-    public boolean equals(Object rhs)
-    {
-        if (!(rhs instanceof Armour)) {
-            return false;
-        }
-
-        Armour rhsItem = (Armour) rhs;
-
-        // Replace this return
-        return false;
-
+    public int hashCode() {
+        return Objects.hash(getName(), material, modifier, element);
     }
 
-    /**
-     * Generate a hash code by adding the name, material, modifier, and element
-     * hash codes.
-     */
     @Override
-    public int hashCode()
-    {
-        // Replace this return
-        return -1;
+    public void read(java.util.Scanner ins) {
+        setName(ins.next());
+        material = ins.next();
+        durability = ins.nextInt();
+        defense = ins.nextInt();
+        modifier = ins.next();
+        modifierLevel = ins.nextInt();
+        element = ins.next();
     }
 
-    /**
-     * *Print* one Armour.
-     */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.join(
             System.lineSeparator(),
-            String.format("  Refer to..."),
-            String.format("  ...solution for the..."),
-            String.format("  ...previous assignment"),
+            "  Nme: " + getName(),
+            "  Dur: " + durability,
+            "  Def: " + defense,
+            "  Mtl: " + material,
+            "  Mdr: " + modifier + " (Lvl " + modifierLevel + ")",
+            "  Emt: " + element,
             ""
         );
     }
 }
-
-
-
-

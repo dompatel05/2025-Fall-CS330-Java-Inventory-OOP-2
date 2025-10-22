@@ -1,154 +1,97 @@
 package edu.odu.cs.cs330.items;
 
 import java.util.Scanner;
+import java.util.Objects;
 
-/**
- * This class represents one tool--as found in most video games. This includes
- * pickaxes and shovels.
- *
- * Tools may not be stacked. All Constructors must initialize Item::stackable
- * to false.
- */
-@SuppressWarnings({
-    "PMD.BeanMembersShouldSerialize",
-    "PMD.CloneMethodReturnTypeMustMatchClassName",
-    "PMD.CloneThrowsCloneNotSupportedException",
-    "PMD.LawOfDemeter",
-    "PMD.OnlyOneReturn",
-    "PMD.ProperCloneImplementation",
-    "PMD.MethodArgumentCouldBeFinal",
-    "PMD.LocalVariableCouldBeFinal",
-    "PMD.ShortClassName",
-})
-public class Tool extends Equippable {
-    /**
-     * Base operation (e.g., harvest/mine) speed.
-     */
-    protected int speed;
+public class Tool extends Item implements Cloneable {
 
-    /**
-     * Default to an unstackable tool with an empty name, zero durability, zero
-     * speed, an empty material name, no modifier, and a modifier level of 1.
-     */
-    public Tool()
-    {
-        super();
+    private int durability;
+    private int speed;
+    private String material;
+    private String modifier;
+    private int modifierLevel;
 
-        this.speed = 0;
+    // Default constructor
+    public Tool() {
+        super("Generic Tool");
+        this.durability = 1;
+        this.speed = 1;
+        this.material = "Wood";
+        this.modifier = "None";
+        this.modifierLevel = 0;
     }
 
-    /**
-     * Duplicate a Tool.
-     *
-     * @param src Tool to duplicate
-     */
-    public Tool(Tool src)
-    {
-        super();
-
-        this.setName(src.name);
-
-        this.durability    = src.durability;
-        this.speed         = src.speed;
-        this.material      = src.material;
-        this.modifier      = src.modifier;
-        this.modifierLevel = src.modifierLevel;
+    // Copy constructor
+    public Tool(Tool other) {
+        super(other.getName());
+        this.durability = other.durability;
+        this.speed = other.speed;
+        this.material = other.material;
+        this.modifier = other.modifier;
+        this.modifierLevel = other.modifierLevel;
     }
 
-    /**
-     * Retrieve tool speed.
-     *
-     * @return how quickly a tool operates
-     */
-    public int getSpeed()
-    {
-        return this.speed;
-    }
+    public int getDurability() { return durability; }
+    public void setDurability(int durability) { this.durability = durability; }
 
-    /**
-     * Set tool speed.
-     *
-     * @param spd new speed
-     */
-    public void setSpeed(int spd)
-    {
-        this.speed = spd;
-    }
+    public int getSpeed() { return speed; }
+    public void setSpeed(int speed) { this.speed = speed; }
+
+    public String getMaterial() { return material; }
+    public void setMaterial(String material) { this.material = material; }
+
+    public String getModifier() { return modifier; }
+    public void setModifier(String modifier) { this.modifier = modifier; }
+
+    public int getModifierLevel() { return modifierLevel; }
+    public void setModifierLevel(int modifierLevel) { this.modifierLevel = modifierLevel; }
 
     @Override
-    public boolean isStackable()
-    {
+    public boolean isStackable() {
         return false;
     }
 
-    /**
-     * Read tool attributes.
-     */
     @Override
-    public void read(Scanner snr)
-    {
-        // Complete this method
+    public void read(Scanner snr) {
+        if (snr.hasNext()) setName(snr.next());
+        if (snr.hasNext()) setMaterial(snr.next());
+        if (snr.hasNextInt()) setDurability(snr.nextInt());
+        if (snr.hasNextInt()) setSpeed(snr.nextInt());
+        if (snr.hasNext()) setModifier(snr.next());
+        if (snr.hasNextInt()) setModifierLevel(snr.nextInt());
     }
 
-    /**
-     * Clone--i.e., copy--this Tool.
-     */
     @Override
-    public Item clone()
-    {
-        Tool cpy = new Tool();
-
-        cpy.setName(this.name);
-
-        cpy.setDurability(this.getDurability());
-        cpy.setSpeed(this.speed);
-        cpy.setMaterial(this.getMaterial());
-        cpy.setModifier(this.getModifier());
-        cpy.setModifierLevel(this.getModifierLevel());
-
-        return cpy;
+    public Tool clone() {
+        return new Tool(this);
     }
 
-    /**
-     * Check for logical equivalence--based on name, material, and modifier.
-     *
-     * @param rhs object for which a comparison is desired
-     */
     @Override
-    public boolean equals(Object rhs)
-    {
-        if (!(rhs instanceof Tool)) {
-            return false;
-        }
-
-        Tool rhsItem = (Tool) rhs;
-
-        // Replace the return
-        return false;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof Tool)) return false;
+        
+        Tool other = (Tool) obj;
+        return Objects.equals(name, other.name) &&
+               Objects.equals(material, other.material) &&
+               Objects.equals(modifier, other.modifier);
     }
 
-    /**
-     * Generate a hash code by adding the name, material, and modifier hash
-     * codes.
-     */
     @Override
-    public int hashCode()
-    {
-        // Replace the return
-        return -1;
+    public int hashCode() {
+        return Objects.hash(name, material, modifier);
     }
 
-    /**
-     * *Print* a Tool.
-     */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.join(
             System.lineSeparator(),
-            String.format("  Refer to..."),
-            String.format("  ...solution for the..."),
-            String.format("  ...previous assignment"),
+            "  Nme: " + name,
+            "  Dur: " + durability,
+            "  Spd: " + speed,
+            "  Mtl: " + material,
+            "  Mdr: " + modifier + " (Lvl " + modifierLevel + ")",
             ""
         );
     }
